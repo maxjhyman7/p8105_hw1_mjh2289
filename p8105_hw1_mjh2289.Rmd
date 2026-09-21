@@ -1,0 +1,98 @@
+---
+title: "Data Science I (P8105), Homework 1"
+author: "Max Hyman (mjh2289), "
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+##### Load the tidyverse package
+```{r, message = FALSE}
+library(tidyverse)
+```
+
+# Problem 1
+
+##### Download the package containing the penguins dataset (not evaluated)
+```{r, eval = FALSE}
+install.packages("palmerpenguins")
+```
+
+##### Load penguins dataset
+```{r}
+data("penguins", package = "palmerpenguins")
+```
+
+The `penguins` dataset includes various measurements for `r length(unique(pull(penguins, species)))` species of penguins from `r length(unique(pull(penguins, island)))` different islands between `r min(pull(penguins, year))` and `r max(pull(penguins, year))`. In total, `r nrow(penguins)` penguins were measured, with `r ncol(penguins)` specific measurements, including species (Adelie, Chinstrap, Gentoo), island (Biscoo, Dream, Torgersen), year (2007, 2008, 2009), sex (male, female), bill length (mm), bill depth (mm), flipper length (mm), and body mass (g). Measurements for sex, bill length, bill depth, and flipper length, and body mass were missing for 2 penguins. The mean flipper length for the 342 penguins with non-missing values was `r round(mean(pull(penguins, (flipper_length_mm)), na.rm = TRUE), 2)` mm. 
+
+##### Generate scatterplot
+```{r, warning = FALSE}
+scatterplot <- penguins |> 
+  ggplot() + 
+  geom_point(mapping = aes(x = bill_length_mm, y = flipper_length_mm, color = species))
+print(scatterplot)
+```
+
+Note that the scatterplot only includes 342 observation pairs, as 2 penguins were missing measurements for bill length and flipper length. 
+
+##### Save scatterplot (not evaluated)
+```{r, eval = FALSE}
+ggsave("scatterplot.png")
+```
+
+# Problem 2
+
+Create the specified data frame with a numeric vector, logical vector, character vector, and factor vector. I first set a randomization seed so the numeric vector which is generated with random sampling produces the same result. 
+
+```{r}
+set.seed(7)
+
+data_frame <- tibble(
+  numeric_vector = rnorm(n = 10, mean = 0, sd = 1),
+  logical_vector = numeric_vector > 0, 
+  character_vector = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
+  factor_vector = factor(c("dog", "dog", "dog", "dog", "cat", "cat", "cat", "horse", "horse", "horse"))
+)
+```
+
+The mean of the numeric vector: 
+```{r}
+data_frame |> 
+  pull(numeric_vector) |> 
+  mean()
+```
+
+The mean of the logical vector:
+```{r}
+data_frame |> 
+  pull(logical_vector) |> 
+  mean()
+```
+
+The mean of the character vector: 
+```{r, warning = FALSE}
+data_frame |> 
+  pull(character_vector) |> 
+  mean()
+```
+
+The mean of the factor vector: 
+```{r, warning = FALSE}
+data_frame |> 
+  pull(factor_vector) |> 
+  mean()
+```
+
+Thus, the mean is calculated for the numeric and logical vectors, but not the character and factor vectors. What if we first convert the logical, character, and factor vectors to numeric vectors, and then try to take the mean? 
+
+```{r, warning = FALSE}
+data_frame_type_convert <- data_frame |> 
+      mutate(
+        logical_vector = as.numeric(logical_vector),
+        character_vector = as.numeric(character_vector),
+        factor_vector = as.numeric(factor_vector)
+        )
+```
+
+The logical vector is converted to 1's (TRUE) and 0's (FALSE), reflecting the underlying boolean values of the logical vector. The character vector is converted entirely to missing values because the vector only contains text values which cannot be converted to numeric values. The factor vector is converted to 1's (cat), 2's (dog), and 3's (horse), which reflect the lexicographic integer ordering of the three categories when the vector was first created. 
+
+The conversion helps clarify why the mean was calculated for the logical vector, as the underlying data for the logical vector are boolean values which are interpreted as 1's (TRUE) and 0's (FALSE) by the mean function. The conversion also clarifies why the mean was not calculated for the character vector, as the underlying data were text. Finally, the conversion demonstrates the complexity of factor vectors Like character vectors, factor vectors are text, and thus the mean was not calculated; however, these factor vectors have an underlying integer indexing each unique element within the vector, such that conversion to a numeric vector is possible and outputs those integer orderings. 

@@ -1,1 +1,1 @@
-# p8105_hw1_mjh2289
+# Homework 1 for Data Science I (P8105). 
