@@ -17,7 +17,7 @@ library(tidyverse)
 install.packages("palmerpenguins")
 ```
 
-##### Load penguins dataset
+##### Load the penguins dataset
 ```{r}
 data("penguins", package = "palmerpenguins")
 ```
@@ -32,7 +32,7 @@ scatterplot <- penguins |>
 print(scatterplot)
 ```
 
-Note that the scatterplot only includes 342 observation pairs, as 2 penguins were missing measurements for bill length and flipper length. 
+<u>Note:</u> The scatterplot only includes 342 observation pairs, as 2 penguins were missing measurements for bill length and flipper length. 
 
 ##### Save scatterplot (not evaluated)
 ```{r, eval = FALSE}
@@ -41,7 +41,7 @@ ggsave("scatterplot.png")
 
 # Problem 2
 
-Create the specified data frame with a numeric vector, logical vector, character vector, and factor vector. I first set a randomization seed so the numeric vector which is generated with random sampling produces the same result. 
+Create the specified data frame with numeric, logical, character, and factor vectors. I first set a randomization seed so the numeric vector generated with random sampling produced the same result. 
 
 ```{r}
 set.seed(7)
@@ -82,7 +82,9 @@ data_frame |>
   mean()
 ```
 
-Thus, the mean is calculated for the numeric and logical vectors, but not the character and factor vectors. What if we first convert the logical, character, and factor vectors to numeric vectors, and then try to take the mean? 
+Thus, the mean is calculated for the numeric and logical vectors, but not the character and factor vectors. 
+
+Next, what if we convert the logical, character, and factor vectors to numeric vectors?
 
 ```{r, warning = FALSE}
 data_frame_type_convert <- data_frame |> 
@@ -93,6 +95,6 @@ data_frame_type_convert <- data_frame |>
         )
 ```
 
-The logical vector is converted to 1's (TRUE) and 0's (FALSE), reflecting the underlying boolean values of the logical vector. The character vector is converted entirely to missing values because the vector only contains text values which cannot be converted to numeric values. The factor vector is converted to 1's (cat), 2's (dog), and 3's (horse), which reflect the lexicographic integer ordering of the three categories when the vector was first created. 
+The logical vector is converted to 1's (TRUE) and 0's (FALSE), reflecting the underlying boolean values of the logical vector. The character vector is converted entirely to missing values because the character vector only contains alphabetical text values which cannot be converted to numeric values. The factor vector is converted to 1's (cat), 2's (dog), and 3's (horse), reflecting the underlying lexicographic integer ordering of the three categories when the factor vector was first created. 
 
-The conversion helps clarify why the mean was calculated for the logical vector, as the underlying data for the logical vector are boolean values which are interpreted as 1's (TRUE) and 0's (FALSE) by the mean function. The conversion also clarifies why the mean was not calculated for the character vector, as the underlying data were text. Finally, the conversion demonstrates the complexity of factor vectors Like character vectors, factor vectors are text, and thus the mean was not calculated; however, these factor vectors have an underlying integer indexing each unique element within the vector, such that conversion to a numeric vector is possible and outputs those integer orderings. 
+These conversions help clarify why the mean was calculated for the logical vector, as the underlying data for the logical vector were boolean values which are appropriate inputs to the mean function. These conversions also clarify why the mean was not calculated for the character vector, as the underlying data were text which is not an appropriate input to the mean function. Finally, the conversions demonstrate the complexity of factor vectors. Factor vectors comprise categorical text, which is not an appropriate input to the mean function; however, these factor vectors also have an underlying integer indexing each unique element within the vector, such that conversion to a numeric vector is possible and outputs a numeric vector comprised of the integer orderings. 

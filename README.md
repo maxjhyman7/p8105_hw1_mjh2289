@@ -1,1 +1,1 @@
-# Homework 1 for Data Science I (P8105). 
+# Homework 1 for Data Science I (P8105) 
